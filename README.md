@@ -1,88 +1,107 @@
 # GitHub Automation Menu Script
 
-This Bash script provides a simple interactive menu for common GitHub actions directly from the terminal.
+This Bash script provides an interactive terminal menu for managing common Git operations.  
+It is designed to simplify daily GitHub workflows while adding safety checks around destructive actions.
 
-It is designed to reduce repetitive Git commands and add safety controls around destructive operations such as deleting files or folders from a repository.
-
-The script is intended for Linux shells.
+The script works on Linux and WSL environments using the standard Git CLI.
 
 ---
 
 ## Features
 
-- Interactive terminal menu
+- Interactive menu-based interface
 - Add and push files to GitHub
-- Delete files or folders from Git and GitHub
-- Built-in safety confirmation to prevent accidental deletion
-- Works on any Git repository
-- Uses standard Git CLI commands
+- Select a single file or add all files
+- Automatic branch detection
+- Automatic pull before push
+- Safe file and directory deletion
+- Mandatory confirmation phrase before deletion
+- Works inside any Git repository
 
 ---
 
 ## Menu Options
 
-When the script runs, the following menu appears:
+When the script runs, the following menu is displayed:
 
 GITHUB MENU
 
-1) Add files to GitHub  
-2) Delete a file or directory from GitHub  
+1) Add files to github  
+2) Delete a file/dir off github  
 q) Quit  
 
 ---
 
 ## Option 1 — Add Files to GitHub
 
-This option is reserved for automating:
+This option automates the full Git workflow:
 
-- git add
-- git commit
-- git push
+- Lists all files in the current directory (excluding `.git`)
+- Allows selecting:
+  - one specific file, or
+  - all files at once
+- Detects the current Git branch automatically
+- Pulls the latest changes from the remote branch
+- Stages selected files
+- Prompts for a commit message
+- Commits and pushes to GitHub
 
-The function is intentionally empty so it can be customized based on your workflow.
+This removes the need to manually run:
 
-Example logic you may add later:
-
-- automatic staging
-- commit message prompt
-- branch detection
-- push automation
-
----
-
-## Option 2 — Delete File or Folder from GitHub
-
-This option performs a destructive Git operation and includes a mandatory confirmation prompt.
-
-What happens:
-
-- The selected file or directory is removed using `git rm`
-- The deletion is committed
-- The commit is pushed to GitHub
-
-The file or folder is deleted locally and from the remote repository.
+- git status  
+- git add  
+- git pull  
+- git commit  
+- git push  
 
 ---
 
-## Deletion Safety System
+## Option 2 — Delete File or Directory
 
-Before deletion occurs, the script requires the user to type the exact phrase:
+This option permanently removes files or folders from both:
+
+- the local repository
+- the GitHub remote repository
+
+Before deletion, the script:
+
+- prompts for the target file or directory
+- requires a commit message
+- displays a large warning message
+- requires the exact confirmation phrase:
 
 i want to delete this
 
 
-If the phrase does not match exactly:
+If the phrase does not match exactly, the operation is aborted.
 
-- The script aborts
-- No files are deleted
-- No Git commands are executed
+---
+
+## Safety System
+
+The delete operation includes multiple safeguards:
+
+- file existence validation
+- mandatory commit message
+- explicit confirmation phrase
+- abort on incorrect input
 
 This prevents accidental deletion caused by:
 
-- running the script too fast
-- mistyping a path
+- mistyped paths
+- running commands too quickly
 - deleting the wrong directory
 - muscle-memory mistakes
+
+---
+
+## Requirements
+
+- Linux or WSL environment
+- Bash shell
+- Git installed
+- Git repository initialized
+- Remote origin configured
 
 ---
 
@@ -95,64 +114,69 @@ chmod +x git_menu.sh
 Run the script:
 
 ./git_menu.sh
-Follow the on-screen menu prompts.
+Follow the on-screen menu instructions.
 ```
-# Requirements:
+# Example Workflow
+Add files:
 
-Linux or WSL environment
+Choose option 1
 
-Bash shell
+Select file number or . for all files
 
-Git installed
+Enter commit message
 
-Git repository initialized
+Files are pulled, committed, and pushed
 
-Remote origin configured
+Delete files:
 
-# Important Notes
-This script must be run inside a Git repository
+Choose option 2
 
-The delete option permanently removes files
-
-Deleted files cannot be recovered unless restored from Git history
-
-# Use with caution
-
-# Example Delete Command Flow
-Select option 2
-
-Enter file or folder name
+Enter file or directory name
 
 Enter commit message
 
 Type the confirmation phrase
 
-Changes are committed and pushed
+Deletion is committed and pushed
+
+# Important Notes
+This script must be run from inside a Git repository
+
+Deleted files are removed locally and remotely
+
+Deleted content can only be restored from Git history
+
+Do not run this script as root
+
+Avoid using wildcards such as * or /
 
 # Security
-Do not run this script as root.
+Do not commit the following files to GitHub:
 
-Do not use wildcards such as * or /.
+~/.aws/credentials
 
-Always double-check the target path before confirming deletion.
+.env files
+
+private keys (*.pem, *.key)
+
+Always use a .gitignore file.
 
 # Future Improvements
-Implement git_add automation
+GitHub-only deletion mode (git rm --cached)
 
-Branch auto-detection
-
-Commit message prompts
-
-GitHub-only deletion using git rm --cached
+File picker with directory preview
 
 Colored menu output
 
+Commit history viewer
+
 Logging support
 
-# Disclaimer
-This script performs real Git operations.
+Multi-branch selection
 
-Once pushed, changes affect the remote repository immediately.
+# Disclaimer
+This script executes real Git commands.
+
+Once changes are pushed, they immediately affect the remote repository.
 
 Use responsibly.
-
