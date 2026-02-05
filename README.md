@@ -1,4 +1,4 @@
-# GitHub Automation Menu Script
+# GitHub Automation ADD OR REMOVE
 
 ![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-Code%20Hosting-181717?style=for-the-badge&logo=github&logoColor=white)
